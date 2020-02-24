@@ -8,9 +8,17 @@ const mongooseOptions = {
 
 // a nice way of destructuring 
 const { MONGODB_URI, PORT } = process.env;
-mongoose.connect(MONGODB_URI, mongooseOptions);
 
-const server = require('./src/app');
+(async () => {
+  try {
+    await mongoose.connect(MONGODB_URI, mongooseOptions);
 
-// this is from the export of app.js, PORT is from dotenv
-server.start(PORT);
+    const server = require('./src/app');
+
+    // this is from the export of app.js, PORT is from dotenv
+    server.start(PORT);
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+})();
